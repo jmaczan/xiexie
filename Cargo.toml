@@ -1,0 +1,10 @@
+[package]
+name = "xiexie"
+version = "0.1.0"
+edition = "2021"
+authors = ["Jedrzej Pawel Maczan <jedrzejpawel@maczan.pl>"]
+description = "谢谢。Static Site Generator"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
