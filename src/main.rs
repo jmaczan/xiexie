@@ -10,8 +10,24 @@ fn main() {
 
     println!("Reading a website skeleton... 💀🦴");
     let skeleton_html_content = read_from_file::read_from_file(skeleton_file_path.as_str());
-    println!("With text:\n{skeleton_html_content}");
+    // println!("With text:\n{skeleton_html_content}");
     println!("Done 💮");
+
+    let raw_pages_list = match get_pages_list::get_pages_list(source_directory) {
+        Ok(pages_list) => pages_list,
+        Err(_) => {
+            println!("I couldn't find source files to generate the website.");
+            return;
+        }
+    };
+
+    let pages_list = raw_pages_list
+        .into_iter()
+        .map(|file| String::from(file.to_str().unwrap()))
+        .filter(|file| file.to_lowercase().ends_with(".html"))
+        .collect::<Vec<String>>();
+
+    println!("{:?}", pages_list);
 
     let mut replaced_file = skeleton_html_content
         .as_str()
@@ -22,6 +38,4 @@ fn main() {
     println!("You're website is ready to use! All generated files are inside the xiexie-build directory. xiexie! 谢谢!");
 
     write_to_file::write_to_file("./dist", "skeleton-filled.html", replaced_file);
-
-    println!("{:?}", get_pages_list::get_pages_list(source_directory));
 }
