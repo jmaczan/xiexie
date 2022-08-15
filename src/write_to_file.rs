@@ -5,9 +5,12 @@ use std::{
 };
 
 pub fn write_to_file(directory_path: &str, file_name: &str, file_content: String) {
+    write_content_to_file(directory_path, file_name, file_content);
+}
+
+pub fn set_up_target_directory(directory_path: &str) {
     remove_directory_with_content(directory_path);
     create_directory(directory_path);
-    write_content_to_file(directory_path, file_name, file_content);
 }
 
 fn remove_directory_with_content(directory_path: &str) {
@@ -15,7 +18,7 @@ fn remove_directory_with_content(directory_path: &str) {
         return;
     }
 
-    remove_dir_all(directory_path).expect("Couldn't remove dist.");
+    remove_dir_all(directory_path).expect("Couldn't remove directory.");
 }
 
 fn create_directory(directory_path: &str) {
