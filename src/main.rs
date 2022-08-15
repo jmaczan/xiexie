@@ -6,7 +6,9 @@ fn main() {
     println!("Starting xiexie 谢谢!");
 
     let source_directory = "./src/".to_owned() + "sample-source-folder";
-    let skeleton_file_path = source_directory.to_owned() + "/" + "skeleton.html";
+    let skeleton_file_name = "skeleton.html";
+    let source_directory_name_length = source_directory.len() as usize;
+    let skeleton_file_path = source_directory.to_owned() + "/" + skeleton_file_name;
 
     println!("Reading a website skeleton... 💀🦴");
     let skeleton_html_content = read_from_file::read_from_file(skeleton_file_path.as_str());
@@ -24,18 +26,27 @@ fn main() {
     let pages_list = raw_pages_list
         .into_iter()
         .map(|file| String::from(file.to_str().unwrap()))
-        .filter(|file| file.to_lowercase().ends_with(".html"))
+        .filter(|file| {
+            file.to_lowercase().ends_with(".html") && !file.ends_with(skeleton_file_name)
+        })
         .collect::<Vec<String>>();
 
     println!("{:?}", pages_list);
 
-    let mut replaced_file = skeleton_html_content
-        .as_str()
-        .replace("xiexie::title", "New title");
-    replaced_file = replaced_file
-        .as_str()
-        .replace("xiexie::body", "<p>Body is here</p>");
-    println!("You're website is ready to use! All generated files are inside the xiexie-build directory. xiexie! 谢谢!");
+    pages_list.into_iter().for_each(|subpage_path| {
+        let mut subpage_content = read_from_file::read_from_file(subpage_path.as_str());
 
-    write_to_file::write_to_file("./dist", "skeleton-filled.html", replaced_file);
+        subpage_content = skeleton_html_content
+            .as_str()
+            .replace("xiexie::title", "New title")
+            .replace("xiexie::body", subpage_content.as_str());
+
+        write_to_file::write_to_file(
+            "./dist",
+            subpage_path.get(source_directory_name_length..).unwrap(),
+            subpage_content,
+        );
+    });
+
+    println!("Your website is ready to use! All generated files are inside the dist directory. xiexie! 谢谢!");
 }
