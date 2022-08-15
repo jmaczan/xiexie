@@ -1,5 +1,5 @@
+use std::fs;
 use std::path::Path;
-
 pub mod get_pages_list;
 pub mod read_from_file;
 pub mod write_to_file;
@@ -13,6 +13,7 @@ fn main() {
     let source_directory_name_length = source_directory.len() as usize;
     let skeleton_file_path = source_directory.to_owned() + "/" + skeleton_file_name;
     let html_extension = ".html";
+    let allowed_assetss_extensions = [".css", ".ttf", ".woff"];
 
     println!("Reading a website skeleton... 💀🦴");
     let skeleton_html_content = read_from_file::read_from_file(skeleton_file_path.as_str());
@@ -32,6 +33,7 @@ fn main() {
     };
 
     files_list
+        .clone()
         .into_iter()
         .filter(|file| {
             file.to_lowercase().ends_with(html_extension) && !file.ends_with(skeleton_file_name)
@@ -64,6 +66,24 @@ fn main() {
                 );
 
             write_to_file::write_to_file(target_directory, subpage_file_name, subpage_content);
+        });
+
+    files_list
+        .into_iter()
+        .filter(|file| {
+            !file.to_lowercase().ends_with(html_extension)
+                && allowed_assetss_extensions
+                    .into_iter()
+                    .any(|extension| file.to_lowercase().ends_with(extension))
+        })
+        .for_each(|file| {
+            fs::copy(
+                &file,
+                target_directory.to_owned()
+                    + "/"
+                    + file.get(source_directory_name_length..).unwrap(),
+            )
+            .unwrap();
         });
 
     println!("Your website is ready to use! All generated files are inside the {} directory. xiexie 谢谢!", target_directory);
