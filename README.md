@@ -1,5 +1,5 @@
-# xiexie
-谢谢。Static Site Generator
+# 谢谢 xiexie
+个的静态网站生成器 Static site generator 
 
 ## Usage
 Download xiexie from [releases](https://github.com/jmaczan/xiexie/releases)
