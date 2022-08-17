@@ -8,3 +8,5 @@ description = "谢谢。Static Site Generator"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+serde_json = "1.0"
+serde = { version = "1.0.143", features = ["derive"] }
