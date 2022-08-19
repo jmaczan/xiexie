@@ -3,17 +3,17 @@ use std::{
     fs::{read_dir, remove_dir_all, DirBuilder, File},
     io,
     io::Write,
-    path::PathBuf,
 };
 
-pub fn get_files_list(source_path: String) -> io::Result<Vec<PathBuf>> {
-    let mut entries = read_dir(source_path)?
-        .map(|res| res.map(|e| e.path()))
-        .collect::<Result<Vec<_>, io::Error>>()?;
+pub fn get_files_list(source_path: String) -> io::Result<Vec<String>> {
+    let mut files = read_dir(source_path)?
+        .map(|file| file.map(|e| e.path()))
+        .map(|file| file.unwrap().to_str().unwrap().to_owned())
+        .collect::<Vec<String>>();
 
-    entries.sort();
+    files.sort();
 
-    Ok(entries)
+    Ok(files)
 }
 
 pub fn write_to_file(target_path: &str, file_name: &str, file_content: String) {

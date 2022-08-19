@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fs;
 use std::path::Path;
+use std::process::ExitCode;
 pub mod io;
 pub mod read_from_file;
 
@@ -31,7 +32,7 @@ const JSON_EXTENSION: &str = ".json";
 const TEMPLATE_PURPOSE: &str = "template";
 const ALLOWED_ASSETS_EXTENSIONS: [&str; 3] = [CSS_EXTENSION, TTF_EXTENSION, WOFF_EXTENSION];
 
-fn main() {
+fn main() -> ExitCode {
     println!("Starting xiexie 谢谢!");
 
     let args = Args::parse();
@@ -43,13 +44,10 @@ fn main() {
     io::set_up_target_directory(&target_directory);
 
     let files_list = match io::get_files_list(source_directory) {
-        Ok(pages_list) => pages_list
-            .into_iter()
-            .map(|page| page.to_str().unwrap().to_owned())
-            .collect::<Vec<String>>(),
+        Ok(files_list) => files_list,
         Err(_) => {
             println!("I couldn't find source files to generate the website.");
-            return;
+            return ExitCode::FAILURE;
         }
     };
 
@@ -130,4 +128,5 @@ fn main() {
         });
 
     println!("Your website is ready to use! All generated files are inside the {} directory. xiexie 谢谢!", target_directory);
+    ExitCode::SUCCESS
 }
