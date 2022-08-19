@@ -1,3 +1,4 @@
+use clap::Parser;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fs;
@@ -13,20 +14,33 @@ struct JSON {
     fields: Vec<HashMap<String, String>>,
 }
 
+#[derive(Parser, Debug)]
+#[clap(author, version, about, long_about = None)]
+struct Args {
+    #[clap(short, long, value_parser)]
+    source: String,
+
+    #[clap(short, long, value_parser, default_value_t = String::from("./dist"))]
+    target: String,
+}
+
 fn main() {
     println!("Starting xiexie 谢谢!");
 
-    let target_directory = "./dist";
-    let source_directory = "./src/".to_owned() + "sample-source-folder/";
+    let args = Args::parse();
+    let source_directory = args.source;
+    let target_directory = String::from(args.target);
+
     let source_directory_name_length = source_directory.len() as usize;
     let html_extension = ".html";
     let css_extension = ".css";
     let ttf_extension = ".ttf";
     let woff_extension = ".woff";
     let json_extension = ".json";
+    let template_purpose = String::from("template");
     let allowed_assetss_extensions = [css_extension, ttf_extension, woff_extension];
 
-    write_to_file::set_up_target_directory(target_directory);
+    write_to_file::set_up_target_directory(&target_directory);
 
     let files_list = match get_pages_list::get_pages_list(source_directory) {
         Ok(pages_list) => pages_list
@@ -57,15 +71,13 @@ fn main() {
                 (source_directory_path.to_owned() + subpage_name + json_extension).as_str(),
             );
             let json_file_content = serde_json::from_str::<JSON>(&raw_json_file_content).unwrap();
-            let template_purpose = String::from("template");
 
-            if json_file_content.purpose == "template".to_owned() {
+            if json_file_content.purpose == template_purpose.to_owned() {
                 return;
             }
 
             let skeleton_file_name = json_file_content.template.as_str();
-            let source_directory = "./src/".to_owned() + "sample-source-folder/";
-            let source_directory_name_length = source_directory.len() as usize;
+            let source_directory = Args::parse().source;
             let skeleton_file_path = source_directory + "/" + skeleton_file_name;
 
             let skeleton_html_content = read_from_file::read_from_file(skeleton_file_path.as_str());
@@ -77,9 +89,6 @@ fn main() {
                 + css_extension
                 + "\" />";
 
-            let json_file_path = source_directory_path.to_owned() + subpage_name + json_extension;
-            let has_json_file = Path::new(&json_file_path).exists();
-            println!("{:?}", subpage_path.as_str());
             let mut subpage_content = read_from_file::read_from_file(subpage_path.as_str());
 
             subpage_content = skeleton_html_content
@@ -101,7 +110,7 @@ fn main() {
                     subpage_content.replace(("xiexie::".to_owned() + key).as_str(), value);
             }
 
-            write_to_file::write_to_file(target_directory, subpage_file_name, subpage_content);
+            write_to_file::write_to_file(&target_directory, subpage_file_name, subpage_content);
         });
 
     files_list
