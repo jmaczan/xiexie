@@ -1,9 +1,13 @@
 use std::path::Path;
 use std::{
-    fs::{read_dir, remove_dir_all, DirBuilder, File},
+    fs::{read_dir, read_to_string, remove_dir_all, DirBuilder, File},
     io,
     io::Write,
 };
+
+pub fn read_from_file(path_to_file: &str) -> String {
+    read_to_string(path_to_file).expect("Failed to read from file.")
+}
 
 pub fn get_files_list(source_path: String) -> io::Result<Vec<String>> {
     let mut files = read_dir(source_path)?

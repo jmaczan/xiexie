@@ -5,7 +5,6 @@ use std::fs;
 use std::path::Path;
 use std::process::ExitCode;
 pub mod io;
-pub mod read_from_file;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 struct JSON {
@@ -62,7 +61,7 @@ fn main() -> ExitCode {
                 .get(..subpage_file_name.len() - HTML_EXTENSION.len())
                 .unwrap();
 
-            let raw_json_file_content = read_from_file::read_from_file(
+            let raw_json_file_content = io::read_from_file(
                 (source_directory_path.to_owned() + subpage_name + JSON_EXTENSION).as_str(),
             );
             let json_file_content = serde_json::from_str::<JSON>(&raw_json_file_content).unwrap();
@@ -75,7 +74,7 @@ fn main() -> ExitCode {
             let source_directory = Args::parse().source;
             let skeleton_file_path = source_directory + "/" + skeleton_file_name;
 
-            let skeleton_html_content = read_from_file::read_from_file(skeleton_file_path.as_str());
+            let skeleton_html_content = io::read_from_file(skeleton_file_path.as_str());
 
             let css_file_path = source_directory_path.to_owned() + subpage_name + CSS_EXTENSION;
             let has_css_file = Path::new(&css_file_path).exists();
@@ -84,7 +83,7 @@ fn main() -> ExitCode {
                 + CSS_EXTENSION
                 + "\" />";
 
-            let mut subpage_content = read_from_file::read_from_file(subpage_path.as_str());
+            let mut subpage_content = io::read_from_file(subpage_path.as_str());
 
             subpage_content = skeleton_html_content
                 .as_str()
