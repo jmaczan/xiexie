@@ -24,6 +24,14 @@ struct Args {
     target: String,
 }
 
+const HTML_EXTENSION: &str = ".html";
+const CSS_EXTENSION: &str = ".css";
+const TTF_EXTENSION: &str = ".ttf";
+const WOFF_EXTENSION: &str = ".woff";
+const JSON_EXTENSION: &str = ".json";
+const TEMPLATE_PURPOSE: &str = "template";
+const ALLOWED_ASSETS_EXTENSIONS: [&str; 3] = [CSS_EXTENSION, TTF_EXTENSION, WOFF_EXTENSION];
+
 fn main() {
     println!("Starting xiexie 谢谢!");
 
@@ -32,13 +40,6 @@ fn main() {
     let target_directory = String::from(args.target);
 
     let source_directory_name_length = source_directory.len() as usize;
-    let html_extension = ".html";
-    let css_extension = ".css";
-    let ttf_extension = ".ttf";
-    let woff_extension = ".woff";
-    let json_extension = ".json";
-    let template_purpose = String::from("template");
-    let allowed_assetss_extensions = [css_extension, ttf_extension, woff_extension];
 
     write_to_file::set_up_target_directory(&target_directory);
 
@@ -56,23 +57,20 @@ fn main() {
     files_list
         .clone()
         .into_iter()
-        .filter(|file| file.to_lowercase().ends_with(html_extension))
+        .filter(|file| file.to_lowercase().ends_with(HTML_EXTENSION))
         .for_each(|subpage_path| {
             let source_directory_path = subpage_path.get(..source_directory_name_length).unwrap();
             let subpage_file_name = subpage_path.get(source_directory_name_length..).unwrap();
             let subpage_name = subpage_file_name
-                .get(..subpage_file_name.len() - html_extension.len())
+                .get(..subpage_file_name.len() - HTML_EXTENSION.len())
                 .unwrap();
-            println!(
-                "{:?}",
-                source_directory_path.to_owned() + subpage_name + json_extension
-            );
+
             let raw_json_file_content = read_from_file::read_from_file(
-                (source_directory_path.to_owned() + subpage_name + json_extension).as_str(),
+                (source_directory_path.to_owned() + subpage_name + JSON_EXTENSION).as_str(),
             );
             let json_file_content = serde_json::from_str::<JSON>(&raw_json_file_content).unwrap();
 
-            if json_file_content.purpose == template_purpose.to_owned() {
+            if json_file_content.purpose == TEMPLATE_PURPOSE.to_owned() {
                 return;
             }
 
@@ -82,11 +80,11 @@ fn main() {
 
             let skeleton_html_content = read_from_file::read_from_file(skeleton_file_path.as_str());
 
-            let css_file_path = source_directory_path.to_owned() + subpage_name + css_extension;
+            let css_file_path = source_directory_path.to_owned() + subpage_name + CSS_EXTENSION;
             let has_css_file = Path::new(&css_file_path).exists();
             let css_file_html_link = "<link rel=\"stylesheet\" href=\"".to_owned()
-                + subpage_name
-                + css_extension
+                + subpage_name.get(1..).unwrap()
+                + CSS_EXTENSION
                 + "\" />";
 
             let mut subpage_content = read_from_file::read_from_file(subpage_path.as_str());
@@ -102,10 +100,11 @@ fn main() {
                     },
                 );
 
-            for (key, value) in json_file_content.fields.iter().flat_map(|d| d.iter()) {
-                println!("{} {}", key, value);
-                println!("----------------------");
-
+            for (key, value) in json_file_content
+                .fields
+                .iter()
+                .flat_map(|field| field.iter())
+            {
                 subpage_content =
                     subpage_content.replace(("xiexie::".to_owned() + key).as_str(), value);
             }
@@ -116,8 +115,8 @@ fn main() {
     files_list
         .into_iter()
         .filter(|file| {
-            !file.to_lowercase().ends_with(html_extension)
-                && allowed_assetss_extensions
+            !file.to_lowercase().ends_with(HTML_EXTENSION)
+                && ALLOWED_ASSETS_EXTENSIONS
                     .into_iter()
                     .any(|extension| file.to_lowercase().ends_with(extension))
         })
