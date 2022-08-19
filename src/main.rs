@@ -1,8 +1,8 @@
 use clap::Parser;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use std::fs;
 use std::process::ExitCode;
+pub mod generate_assets;
 pub mod generate_html;
 pub mod io;
 
@@ -38,8 +38,6 @@ fn main() -> ExitCode {
     let source_directory = args.source;
     let target_directory = String::from(args.target);
 
-    let source_directory_name_length = source_directory.len() as usize;
-
     io::set_up_target_directory(&target_directory);
 
     let files_list = match io::get_files_list(source_directory) {
@@ -52,23 +50,7 @@ fn main() -> ExitCode {
 
     generate_html::generate_html(&files_list);
 
-    files_list
-        .into_iter()
-        .filter(|file| {
-            !file.to_lowercase().ends_with(HTML_EXTENSION)
-                && ALLOWED_ASSETS_EXTENSIONS
-                    .into_iter()
-                    .any(|extension| file.to_lowercase().ends_with(extension))
-        })
-        .for_each(|file| {
-            fs::copy(
-                &file,
-                target_directory.to_owned()
-                    + "/"
-                    + file.get(source_directory_name_length..).unwrap(),
-            )
-            .unwrap();
-        });
+    generate_assets::generate_assets(files_list);
 
     println!("Your website is ready to use! All generated files are inside the {} directory. xiexie 谢谢!", target_directory);
     ExitCode::SUCCESS
