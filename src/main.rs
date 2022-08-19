@@ -3,9 +3,8 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fs;
 use std::path::Path;
-pub mod get_pages_list;
+pub mod io;
 pub mod read_from_file;
-pub mod write_to_file;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 struct JSON {
@@ -41,9 +40,9 @@ fn main() {
 
     let source_directory_name_length = source_directory.len() as usize;
 
-    write_to_file::set_up_target_directory(&target_directory);
+    io::set_up_target_directory(&target_directory);
 
-    let files_list = match get_pages_list::get_pages_list(source_directory) {
+    let files_list = match io::get_files_list(source_directory) {
         Ok(pages_list) => pages_list
             .into_iter()
             .map(|page| page.to_str().unwrap().to_owned())
@@ -109,7 +108,7 @@ fn main() {
                     subpage_content.replace(("xiexie::".to_owned() + key).as_str(), value);
             }
 
-            write_to_file::write_to_file(&target_directory, subpage_file_name, subpage_content);
+            io::write_to_file(&target_directory, subpage_file_name, subpage_content);
         });
 
     files_list
