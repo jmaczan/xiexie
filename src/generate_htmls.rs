@@ -84,7 +84,11 @@ fn append_css_link(
 
 fn build_css_link(subpage_name: &str) -> String {
     "<link rel=\"stylesheet\" href=\"".to_owned()
-        + subpage_name.get(1..).unwrap()
+        + Path::new(subpage_name)
+            .file_name()
+            .unwrap()
+            .to_str()
+            .unwrap()
         + CSS_EXTENSION
         + "\" />"
 }
