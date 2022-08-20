@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::process::ExitCode;
 pub mod generate_assets;
-pub mod generate_html;
+pub mod generate_htmls;
 pub mod io;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -48,7 +48,7 @@ fn main() -> ExitCode {
         }
     };
 
-    generate_html::generate_html(&files_list);
+    generate_htmls::generate_htmls(&files_list);
 
     generate_assets::generate_assets(files_list);
 
