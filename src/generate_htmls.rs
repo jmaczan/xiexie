@@ -32,23 +32,21 @@ fn generate_html_file(file_path: String) {
 
     let template_html_content = read_template(&configuration, source_directory);
 
-    let css_file_path = source_directory_path.to_owned() + subpage_name + CSS_EXTENSION;
-    let has_css_file = Path::new(&css_file_path).exists();
-    let css_file_html_link = build_css_link(subpage_name);
-
     let mut subpage_content = io::read_from_file(file_path.as_str());
 
     append_css_link(
         &mut subpage_content,
         template_html_content,
-        has_css_file,
-        css_file_html_link,
+        source_directory_path,
+        subpage_name,
     );
 
-    for (key, value) in configuration.fields.iter().flat_map(|field| field.iter()) {
-        subpage_content = subpage_content.replace((TAG_PREFIX.to_owned() + key).as_str(), value);
-    }
+    replace_tags(configuration, &mut subpage_content);
 
+    write_to_target_file(subpage_file_name, subpage_content);
+}
+
+fn write_to_target_file(subpage_file_name: &str, subpage_content: String) {
     io::write_to_file(
         Args::parse().target.as_str(),
         subpage_file_name,
@@ -56,12 +54,22 @@ fn generate_html_file(file_path: String) {
     );
 }
 
+fn replace_tags(configuration: JSON, subpage_content: &mut String) {
+    for (tag, content) in configuration.fields.iter().flat_map(|field| field.iter()) {
+        *subpage_content = subpage_content.replace((TAG_PREFIX.to_owned() + tag).as_str(), content);
+    }
+}
+
 fn append_css_link(
     subpage_content: &mut String,
     template_html_content: String,
-    has_css_file: bool,
-    css_file_html_link: String,
+    source_directory_path: &str,
+    subpage_name: &str,
 ) {
+    let css_file_path = source_directory_path.to_owned() + subpage_name + CSS_EXTENSION;
+    let has_css_file = Path::new(&css_file_path).exists();
+    let css_file_html_link = build_css_link(subpage_name);
+
     *subpage_content = template_html_content
         .as_str()
         .replace(BODY_TAG, subpage_content.as_str())
