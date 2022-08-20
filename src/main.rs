@@ -39,8 +39,6 @@ fn main() -> ExitCode {
     let source_directory = args.source;
     let target_directory = String::from(args.target);
 
-    io::set_up_target_directory(&target_directory);
-
     let files_list = match io::get_files_list(source_directory) {
         Ok(files_list) => files_list,
         Err(_) => {
@@ -48,6 +46,8 @@ fn main() -> ExitCode {
             return ExitCode::FAILURE;
         }
     };
+
+    io::set_up_target_directory(&target_directory);
 
     generate_htmls::generate_htmls(&files_list);
 
