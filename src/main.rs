@@ -30,6 +30,9 @@ const WOFF_EXTENSION: &str = ".woff";
 const JSON_EXTENSION: &str = ".json";
 const TEMPLATE_PURPOSE: &str = "template";
 const ALLOWED_ASSETS_EXTENSIONS: [&str; 3] = [CSS_EXTENSION, TTF_EXTENSION, WOFF_EXTENSION];
+const TAG_PREFIX: &str = "xiexie::";
+const BODY_TAG: &str = "xiexie::body";
+const CSS_TAG: &str = "xiexie::css";
 
 fn main() -> ExitCode {
     println!("Starting xiexie 谢谢!");

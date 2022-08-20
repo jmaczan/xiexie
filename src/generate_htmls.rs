@@ -2,7 +2,10 @@ use std::path::Path;
 
 use clap::Parser;
 
-use crate::{io, Args, CSS_EXTENSION, HTML_EXTENSION, JSON, JSON_EXTENSION, TEMPLATE_PURPOSE};
+use crate::{
+    io, Args, BODY_TAG, CSS_EXTENSION, CSS_TAG, HTML_EXTENSION, JSON, JSON_EXTENSION, TAG_PREFIX,
+    TEMPLATE_PURPOSE,
+};
 
 pub fn generate_htmls(files_list: &Vec<String>) {
     files_list
@@ -46,9 +49,9 @@ fn generate_html_file(file_path: String) {
 
     subpage_content = template_html_content
         .as_str()
-        .replace("xiexie::body", subpage_content.as_str())
+        .replace(BODY_TAG, subpage_content.as_str())
         .replace(
-            "xiexie::css",
+            CSS_TAG,
             match has_css_file {
                 true => css_file_html_link.as_str(),
                 false => "",
@@ -60,7 +63,7 @@ fn generate_html_file(file_path: String) {
         .iter()
         .flat_map(|field| field.iter())
     {
-        subpage_content = subpage_content.replace(("xiexie::".to_owned() + key).as_str(), value);
+        subpage_content = subpage_content.replace((TAG_PREFIX.to_owned() + key).as_str(), value);
     }
 
     io::write_to_file(
