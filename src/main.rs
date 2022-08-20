@@ -35,8 +35,6 @@ const BODY_TAG: &str = "xiexie::body";
 const CSS_TAG: &str = "xiexie::css";
 
 fn main() -> ExitCode {
-    println!("Starting xiexie 谢谢!");
-
     let args = Args::parse();
     let source_directory = args.source;
     let target_directory = String::from(args.target);
@@ -55,6 +53,9 @@ fn main() -> ExitCode {
 
     generate_assets::generate_assets(files_list);
 
-    println!("Your website is ready to use! All generated files are inside the {} directory. xiexie 谢谢!", target_directory);
+    println!(
+        "Success. Your website is in {} directory.",
+        target_directory
+    );
     ExitCode::SUCCESS
 }
