@@ -1,5 +1,5 @@
-# 谢谢 xiexie
-个的静态网站生成器 Static site generator 
+# xiexie 谢谢 
+Static site generator 个的静态网站生成器 
 
 ## Usage
 Download xiexie from [releases](https://github.com/jmaczan/xiexie/releases)
@@ -14,6 +14,6 @@ Run `cargo build --release` in a project root directory. You need Rust and Cargo
 A binary file will be available in `target/release/xiexie`
 
 ## License
-GNU GPL v2
+Free for personal use. [Email me](jedrzejpawel@maczan.pl) for a commercial license.
 
-Copyright [Jędrzej Paweł Maczan](https://maczan.pl/), 2022
+© Copyright [Jędrzej Paweł Maczan](https://maczan.pl/). Made in [Poland](https://en.wikipedia.org/wiki/Poland), 2022

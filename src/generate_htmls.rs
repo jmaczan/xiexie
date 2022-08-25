@@ -1,10 +1,10 @@
-use std::path::Path;
+use std::{collections::HashMap, path::Path};
 
 use clap::Parser;
 
 use crate::{
-    io, Args, BODY_TAG, CSS_EXTENSION, CSS_TAG, HTML_EXTENSION, JSON, JSON_EXTENSION, TAG_PREFIX,
-    TEMPLATE_PURPOSE,
+    io, Args, AGGREGATOR_PURPOSE, BODY_TAG, CSS_EXTENSION, CSS_TAG, HTML_EXTENSION, JSON,
+    JSON_EXTENSION, TAG_PREFIX, TEMPLATE_PURPOSE,
 };
 
 pub fn generate_htmls(files_list: &Vec<String>) {
@@ -34,6 +34,84 @@ fn generate_html_file(file_path: String) {
 
     let mut subpage_content = io::read_from_file(file_path.as_str());
 
+    if configuration.purpose == AGGREGATOR_PURPOSE.to_owned() {
+        configuration
+            .aggregations
+            .unwrap()
+            .iter()
+            .flat_map(|field| field.iter())
+            .into_iter()
+            .for_each(|(aggregation_name, aggregation)| {
+                println!("{} {:?}", aggregation_name, aggregation);
+                let _: &String = aggregation_name;
+                let _: &Vec<HashMap<std::string::String, std::string::String>> = aggregation;
+
+                let aggregation_template_start_tag =
+                    "<xiexie::aggregation::".to_owned() + aggregation_name + ">";
+                let aggregation_template_end_tag =
+                    "</xiexie::aggregation::".to_owned() + aggregation_name + ">";
+
+                let aggregation_template_start: usize;
+                match subpage_content.find(&(aggregation_template_start_tag)) {
+                    Some(value) => aggregation_template_start = value,
+                    None => {
+                        return;
+                    }
+                };
+
+                let aggregation_template_end: usize;
+                match subpage_content.find(&(aggregation_template_end_tag)) {
+                    Some(value) => aggregation_template_end = value,
+                    None => {
+                        return;
+                    }
+                };
+
+                let aggregation_template: &str;
+                match subpage_content.get(
+                    aggregation_template_start + aggregation_template_start_tag.len()
+                        ..aggregation_template_end,
+                ) {
+                    Some(value) => aggregation_template = value,
+                    None => {
+                        return;
+                    }
+                }
+
+                println!("{}", aggregation_template);
+                // find position of opening and closing tag - <xiexie::aggregation::{aggregation_name}> and </xiexie::aggregation::{aggregation_name}>
+                // if not found, omit further mapping for this aggregation_name
+                // if found:
+                //  make a copy of content between start of opening and end of closing tag, call it aggregation_template
+                //  make an empty string, call it aggregation_html
+                //  iterate over all aggregation_items in an aggregation and for each:
+                //  copy an aggregation_template as aggregation_item_html
+                //  open {aggregation_item_name}.json
+                //  iterate over fields and for each field:
+                //  replace each xiexie::aggregation::{aggregation_name}::{field} with field's value in aggregation_item_html
+                //  append aggregation_item_html to the end of aggregation_html
+                // replace content in tag with aggregation_html
+                // after everything is finished, write_to_target_file(subpage_file_name, subpage_content)
+                aggregation
+                    .into_iter()
+                    .flat_map(|field| field.iter())
+                    .for_each(|(aggregation_item_name, aggregation_item)| {
+                        println!(
+                            "{:?} {:?} {:?}",
+                            aggregation_name, aggregation_item_name, aggregation_item
+                        );
+                        // *subpage_content = subpage_content.replace((TAG_PREFIX.to_owned() + aggregation).as_str(), content);
+                        // let file_configuration = read_configuration(source_directory_path,aggregation_item_name);
+                        // file_configuration.fields.unwrap()
+                    });
+                // for (aggregation_item, content) in aggregation.iter().flat_map(|field| field.iter()) {}
+                // *subpage_content =
+                //     subpage_content.replace((TAG_PREFIX.to_owned() + aggregation).as_str(), content);
+            });
+        write_to_target_file(subpage_file_name, subpage_content);
+        return;
+    }
+
     append_css_link(
         &mut subpage_content,
         template_html_content,
@@ -55,7 +133,12 @@ fn write_to_target_file(subpage_file_name: &str, subpage_content: String) {
 }
 
 fn replace_tags(configuration: JSON, subpage_content: &mut String) {
-    for (tag, content) in configuration.fields.iter().flat_map(|field| field.iter()) {
+    for (tag, content) in configuration
+        .fields
+        .unwrap()
+        .iter()
+        .flat_map(|field| field.iter())
+    {
         *subpage_content = subpage_content.replace((TAG_PREFIX.to_owned() + tag).as_str(), content);
     }
 }

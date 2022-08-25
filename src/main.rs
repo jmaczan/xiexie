@@ -10,7 +10,8 @@ pub mod io;
 struct JSON {
     purpose: String,
     template: String,
-    fields: Vec<HashMap<String, String>>,
+    fields: Option<Vec<HashMap<String, String>>>,
+    aggregations: Option<Vec<HashMap<String, Vec<HashMap<String, String>>>>>,
 }
 
 #[derive(Parser, Debug)]
@@ -29,6 +30,7 @@ const TTF_EXTENSION: &str = ".ttf";
 const WOFF_EXTENSION: &str = ".woff";
 const JSON_EXTENSION: &str = ".json";
 const TEMPLATE_PURPOSE: &str = "template";
+const AGGREGATOR_PURPOSE: &str = "aggregator";
 const ALLOWED_ASSETS_EXTENSIONS: [&str; 3] = [CSS_EXTENSION, TTF_EXTENSION, WOFF_EXTENSION];
 const TAG_PREFIX: &str = "xiexie::";
 const BODY_TAG: &str = "xiexie::body";
