@@ -42,7 +42,6 @@ fn generate_html_file(file_path: String) {
             .flat_map(|field| field.iter())
             .into_iter()
             .for_each(|(aggregation_name, aggregation)| {
-                println!("{} {:?}", aggregation_name, aggregation);
                 let _: &String = aggregation_name;
                 let _: &Vec<HashMap<std::string::String, std::string::String>> = aggregation;
 
@@ -78,93 +77,30 @@ fn generate_html_file(file_path: String) {
                     }
                 }
 
-                println!("{}", aggregation_template);
                 let mut aggregation_html = "".to_owned();
-                // find position of opening and closing tag - <xiexie::aggregation::{aggregation_name}> and </xiexie::aggregation::{aggregation_name}>
-                // if not found, omit further mapping for this aggregation_name
-                // if found:
-                //  make a copy of content between start of opening and end of closing tag, call it aggregation_template
-                //  make an empty string, call it aggregation_html
-                //  iterate over all aggregation_items in an aggregation and for each:
-                //  copy an aggregation_template as aggregation_item_html
-                //  open {aggregation_item_name}.json
-                //  iterate over fields and for each field:
-                //  replace each xiexie::aggregation::{aggregation_name}::{field} with field's value in aggregation_item_html
-                //  append aggregation_item_html to the end of aggregation_html
-                // replace content in tag with aggregation_html
-                // after everything is finished, write_to_target_file(subpage_file_name, subpage_content)
                 aggregation
                     .into_iter()
                     .flat_map(|field| field.iter())
-                    .for_each(|(aggregation_item_name, aggregation_item)| {
+                    .for_each(|(aggregation_item_name, _)| {
                         let mut aggregation_item_html = aggregation_template.clone().to_owned();
-                        println!(
-                            "{:?} {:?} {:?} {:?}",
-                            aggregation_name,
-                            aggregation_item_name,
-                            aggregation_item,
-                            source_directory_path
-                        );
-                        // *subpage_content = subpage_content.replace((TAG_PREFIX.to_owned() + aggregation).as_str(), content);
+
                         let file_configuration =
                             read_configuration(source_directory_path, aggregation_item_name);
 
                         replace_aggregation_item_html(
                             file_configuration,
                             &mut aggregation_item_html,
-                            &mut &aggregation_html.to_owned(),
                             aggregation_name,
                         );
 
                         aggregation_html =
                             aggregation_html.clone() + aggregation_item_html.as_str();
-
-                        println!("{:?}", aggregation_item_html);
-
-                        // for (tag, content) in file_configuration
-                        //     .fields
-                        //     .unwrap()
-                        //     .iter()
-                        //     .flat_map(|field| field.iter())
-                        // {
-                        //     let aggregation_item_field_name =
-                        //         "xiexie::aggregation::".to_owned() + aggregation_name + "::" + tag;
-                        //     println!("{:?} {:?} {:?}", tag, content, aggregation_item_field_name);
-                        //     *aggregation_item_html = aggregation_item_html
-                        //         .as_str()
-                        //         .replace(
-                        //             "xiexie::aggregation::".to_owned()
-                        //                 + aggregation_name
-                        //                 + "::"
-                        //                 + tag,
-                        //             "some text",
-                        //         )
-                        //         .to_string();
-                        // }
-
-                        // for (tag, content) in file_configuration
-                        //     .clone() // unnecessary if no println afterwards
-                        //     .fields
-                        //     .unwrap()
-                        //     .iter()
-                        // {
-                        // }
-                        // println!("{:?}", file_configuration.fields.unwrap());
                     });
-                println!("--------");
-                println!("{:?}", aggregation_html);
-                // *subpage_content =
                 subpage_content.replace_range(
                     aggregation_template_start
                         ..aggregation_template_end + aggregation_template_end_tag.len(),
                     aggregation_html.as_str(),
                 );
-
-                // *subpage_content =
-                //     subpage_content.replace(aggregation_template, aggregation_html.as_str());
-                // for (aggregation_item, content) in aggregation.iter().flat_map(|field| field.iter()) {}
-                // *subpage_content =
-                //     subpage_content.replace((TAG_PREFIX.to_owned() + aggregation).as_str(), content);
             });
         write_to_target_file(subpage_file_name, subpage_content);
         return;
@@ -185,7 +121,6 @@ fn generate_html_file(file_path: String) {
 fn replace_aggregation_item_html(
     file_configuration: JSON,
     aggregation_item_html: &mut String,
-    aggregation_html: &mut &String,
     aggregation_name: &String,
 ) {
     for (tag, content) in file_configuration
@@ -198,10 +133,6 @@ fn replace_aggregation_item_html(
             ("xiexie::aggregation::".to_owned() + aggregation_name + "::" + tag).as_str(),
             content,
         );
-        println!("{:?} {:?}", tag, content);
-        println!("{:?}", aggregation_item_html);
-        // *aggregation_html = &(aggregation_html.clone().to_string() + aggregation_item_html.as_str());
-        // https://doc.rust-lang.org/book/ch04-01-what-is-ownership.html
     }
 }
 
@@ -265,13 +196,6 @@ fn read_template(configuration: &JSON, source_directory: String) -> String {
 }
 
 fn read_configuration(source_directory_path: &str, subpage_name: &str) -> JSON {
-    // println!(
-    //     "{:?} {:?}",
-    //     source_directory_path,
-    //     Path::new(source_directory_path)
-    //         .join(subpage_name)
-    //         .with_extension(JSON_EXTENSION)
-    // );
     let raw_json_file_content = io::read_from_file(
         (source_directory_path.to_owned() + "/" + subpage_name + JSON_EXTENSION).as_str(),
     );
