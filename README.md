@@ -14,6 +14,6 @@ Run `cargo build --release` in a project root directory. You need Rust and Cargo
 A binary file will be available in `target/release/xiexie`
 
 ## License
-Free for personal use. [Email me](jedrzejpawel@maczan.pl) for a commercial license.
+Free for personal use. [Email me](mailto:jedrzejpawel@maczan.pl) for a commercial license.
 
 © Copyright [Jędrzej Paweł Maczan](https://maczan.pl/). Made in [Poland](https://en.wikipedia.org/wiki/Poland), 2022
