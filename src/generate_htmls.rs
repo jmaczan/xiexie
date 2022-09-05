@@ -155,7 +155,8 @@ fn generate_html_file(file_path: String) {
                 println!("{:?}", aggregation_html);
                 // *subpage_content =
                 subpage_content.replace_range(
-                    aggregation_template_start..aggregation_template_end,
+                    aggregation_template_start
+                        ..aggregation_template_end + aggregation_template_end_tag.len(),
                     aggregation_html.as_str(),
                 );
 
