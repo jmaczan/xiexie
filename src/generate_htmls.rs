@@ -36,6 +36,7 @@ fn generate_html_file(file_path: String) {
 
     if configuration.purpose == AGGREGATOR_PURPOSE.to_owned() {
         configuration
+            .clone()
             .aggregations
             .unwrap()
             .iter()
@@ -102,6 +103,14 @@ fn generate_html_file(file_path: String) {
                     aggregation_html.as_str(),
                 );
             });
+
+        append_css_link(
+            &mut subpage_content,
+            template_html_content,
+            source_directory_path,
+            subpage_name,
+        );
+        replace_tags(configuration, &mut subpage_content);
         write_to_target_file(subpage_file_name, subpage_content);
         return;
     }
