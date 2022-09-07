@@ -1,8 +1,7 @@
 <p align="center"><img width="150" src="xiexie.png" alt="xiexie logo"></p>
 
-`Static site generator 个的静态网站生成器`
-
 # xiexie 谢谢
+Static site generator 个的静态网站生成器
 
 ## Usage
 Download xiexie from [releases](https://github.com/jmaczan/xiexie/releases)
