@@ -39,7 +39,7 @@ A file has a `purpose`. If it's a template for other pages, set it to `template`
 If a file is a regular page, it needs a `template`. Put a name of a template as a value, i.e. `"blog-post"`.
 
 
-```JSON
+```py
 {
     "purpose": "template" | "aggregator" | "",
     "template": templateFileName,
