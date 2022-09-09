@@ -3,10 +3,62 @@
 # `xiexie 谢谢`
 Static site generator 个的静态网站生成器
 
-## Usage
+## Documentation
+
+### Body tag
+```HTML
+xiexie::body
+```
+
+### CSS tag
+```HTML
+xiexie::css
+```
+
+### Aggregation tag
+```HTML
+<xiexie::aggregation::aggregationName>
+    xiexie::aggregation:aggregationName::fieldName
+</xiexie::aggregation::aggregationName>
+```
+
+### JSON configuration schema
+```JSON
+{
+    "purpose": "template" | "aggregator",
+    "template": templateFileName,
+    "fields": [
+        {
+            fieldFileName: ""
+        },
+        {
+            anotherFieldFileName: ""
+        }
+    ],
+    "aggregations": [
+        {
+            aggregationName: [
+                {
+                    fieldFileName: ""
+                },
+                {
+                    anotherFieldFileName: ""
+                }
+            ]
+        }
+    ]
+}
+```
+
+## Installation
 Download xiexie from [releases](https://github.com/jmaczan/xiexie/releases)
 
 To use it globally, copy xiexie to `/usr/bin`
+
+## Run
+```
+xiexie --source path/to/source/directory --target path/to/target/directory
+```
 
 ## Build
 If you don't want to use a released binary version, build xiexie on your own. [Clone](https://github.com/jmaczan/xiexie.git) this repository
