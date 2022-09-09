@@ -4,18 +4,27 @@
 Static site generator 个的静态网站生成器
 
 ## Documentation
+For each page named i.e. `about`, you create 3 files: 
+- HTML with content and `xiexie::`-prefixed tags (`about.html`)
+- CSS with page specific styles (`about.css`)
+- JSON (`about.json`)
+
+JSON file needs a specific schema, which is defined below.
 
 ### Body tag
+This is where content of a `template` is rendered.
 ```HTML
 xiexie::body
 ```
 
 ### CSS tag
+It is replaced with a `<link>` pointing to a page's CSS file.
 ```HTML
 xiexie::css
 ```
 
 ### Aggregation tag
+Use aggregations when you want to make copies of some HTML structure multiple times. For example, when you want to render a collection of posts on a blog.
 ```HTML
 <xiexie::aggregation::aggregationName>
     xiexie::aggregation:aggregationName::fieldName
@@ -23,9 +32,16 @@ xiexie::css
 ```
 
 ### JSON configuration schema
+This is how your JSON file is structured.
+
+A file has a `purpose`. If it's a template for other pages, set it to `template`. If it renders a collection of pages, set it to `aggregator`. If it's just a page, set it to empty string `""`.
+
+If a file is a regular page, it needs a `template`. Put a name of a template as a value, i.e. `"blog-post"`.
+
+
 ```JSON
 {
-    "purpose": "template" | "aggregator",
+    "purpose": "template" | "aggregator" | "",
     "template": templateFileName,
     "fields": [
         {
@@ -50,7 +66,7 @@ xiexie::css
 }
 ```
 
-## Installation
+## Install
 Download xiexie from [releases](https://github.com/jmaczan/xiexie/releases)
 
 To use it globally, copy xiexie to `/usr/bin`
