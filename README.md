@@ -1,6 +1,6 @@
 <p align="center"><img width="150" src="xiexie.png" alt="xiexie logo"></p>
 
-# xiexie 谢谢
+# `xiexie 谢谢`
 Static site generator 个的静态网站生成器
 
 ## Usage
