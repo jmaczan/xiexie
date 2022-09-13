@@ -29,11 +29,21 @@ const CSS_EXTENSION: &str = ".css";
 const TTF_EXTENSION: &str = ".ttf";
 const WOFF_EXTENSION: &str = ".woff";
 const ICO_EXTENSION: &str = ".ico";
+const PNG_EXTENSION: &str = ".png";
+const JPG_EXTENSION: &str = ".jpg";
+const GIF_EXTENSION: &str = ".gif";
 const JSON_EXTENSION: &str = ".json";
 const TEMPLATE_PURPOSE: &str = "template";
 const AGGREGATOR_PURPOSE: &str = "aggregator";
-const ALLOWED_ASSETS_EXTENSIONS: [&str; 4] =
-    [CSS_EXTENSION, ICO_EXTENSION, TTF_EXTENSION, WOFF_EXTENSION];
+const ALLOWED_ASSETS_EXTENSIONS: [&str; 7] = [
+    CSS_EXTENSION,
+    ICO_EXTENSION,
+    TTF_EXTENSION,
+    WOFF_EXTENSION,
+    PNG_EXTENSION,
+    JPG_EXTENSION,
+    GIF_EXTENSION,
+];
 const TAG_PREFIX: &str = "xiexie::";
 const BODY_TAG: &str = "xiexie::body";
 const CSS_TAG: &str = "xiexie::css";
