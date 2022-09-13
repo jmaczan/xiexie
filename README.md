@@ -4,7 +4,9 @@
 Static site generator 个的静态网站生成器
 
 ## Quick start
-If you like learning by example, you can check out a sample [xiexie blog template](https://github.com/jmaczan/xiexie-blog-template) and play with it to get an intuition. Just remember that values are rendered by prefixing with `xiexie::` and each html needs a JSON config file, most of them are more or less copy-paste of another.
+If you like learning by example, you can check out a [xiexie blog template](https://github.com/jmaczan/xiexie-blog-template) and play with it to get an intuition. To start you only need to know that the dynamic values are rendered by prefixing with `xiexie::` and each html needs a JSON config file, most of them are more or less copy-paste of another.
+
+For a real-world usage of xiexie, you can check my [technical blog](https://maczan.pl/).
 
 ## Install
 Download xiexie from [releases](https://github.com/jmaczan/xiexie/releases)
