@@ -34,18 +34,17 @@ Use aggregations when you want to make copies of some HTML structure multiple ti
 ### JSON configuration schema
 This is how your JSON file is structured.
 
-A file has a `purpose`. If it's a template for other pages, set it to `template`. If it renders a collection of pages, set it to `aggregator`. If it's just a page, set it to empty string `""`.
+A file has a `purpose`. If it's a template for other pages, set it to `template`. If it renders a collection of pages, set it to `aggregator`. If it's a page (like `about.html`), set it to `"page"`.
 
 If a file is a regular page, it needs a `template`. Put a name of a template as a value, i.e. `"blog-post"`.
 
-
 ```py
 {
-    "purpose": "template" | "aggregator" | "",
+    "purpose": "template" | "aggregator" | "page",
     "template": templateFileName,
     "fields": [
         {
-            fieldFileName: ""
+            fieldFileName: "value of field name"
         },
         {
             anotherFieldFileName: ""
@@ -65,6 +64,10 @@ If a file is a regular page, it needs a `template`. Put a name of a template as 
     ]
 }
 ```
+
+#### Template JSON example
+
+#### Page JSON example
 
 ## Install
 Download xiexie from [releases](https://github.com/jmaczan/xiexie/releases)
