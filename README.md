@@ -3,7 +3,21 @@
 # `xiexie 谢谢`
 Static site generator 个的静态网站生成器
 
+## Quick start
+If you like learning by example, you can check out a sample [xiexie blog template](https://github.com/jmaczan/xiexie-blog-template) and play with it to get an intuition. Just remember that values are rendered by prefixing with `xiexie::` and each html needs a JSON config file, most of them are more or less copy-paste of another.
+
+## Install
+Download xiexie from [releases](https://github.com/jmaczan/xiexie/releases)
+
+To use it globally, copy xiexie to `/usr/bin`
+
+## Run
+```
+xiexie --source path/to/source/directory --target path/to/target/directory
+```
+
 ## Documentation
+
 For each page named i.e. `about`, you create 3 files: 
 - HTML with content and `xiexie::`-prefixed tags (`about.html`)
 - CSS with page specific styles (`about.css`)
@@ -63,20 +77,6 @@ If a file is a regular page, it needs a `template`. Put a name of a template as 
         }
     ]
 }
-```
-
-#### Template JSON example
-
-#### Page JSON example
-
-## Install
-Download xiexie from [releases](https://github.com/jmaczan/xiexie/releases)
-
-To use it globally, copy xiexie to `/usr/bin`
-
-## Run
-```
-xiexie --source path/to/source/directory --target path/to/target/directory
 ```
 
 ## Build
